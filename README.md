@@ -1,5 +1,5 @@
 # Tashys Boutique - E-commerce Website
-Student: Linda Tashinga - Gweru, ZW
+Student: Linda Tashinga- Harare, YW
 
 ## LIVE LINKS FOR MARKING
 - Shop: / (home page)
