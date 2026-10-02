@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(cuid())
+  name String
+  email String @unique
+  password String
+  role String @default("customer")
+  orders Order[]
+}
+
+model Category {
+  id String @id @default(cuid())
+  name String @unique
+  products Product[]
+}
+
+model Product {
+  id String @id @default(cuid())
+  name String
+  description String
+  price Float
+  stock Int
+  image String
+  categoryId String
+  category Category @relation(fields: [categoryId], references: [id])
+  cartItems CartItem[]
+  orderItems OrderItem[]
+}
+
+model Cart {
+  id String @id @default(cuid())
+  userId String @unique
+  items CartItem[]
+}
+
+model CartItem {
+  id String @id @default(cuid())
+  cartId String
+  productId String
+  quantity Int
+  cart Cart @relation(fields: [cartId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model Order {
+  id String @id @default(cuid())
+  userId String
+  total Float
+  status String @default("pending")
+  address String
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id])
+  items OrderItem[]
+  payment Payment?
+}
+
+model OrderItem {
+  id String @id @default(cuid())
+  orderId String
+  productId String
+  quantity Int
+  price Float
+  order Order @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model Payment {
+  id String @id @default(cuid())
+  orderId String @unique
+  status String
+  method String
+  order Order @relation(fields: [orderId], references: [id])
+}
