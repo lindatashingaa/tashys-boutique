@@ -2,7 +2,7 @@
 
 ## Business overview
 
-TASHY'S BOUTIQUE is a women's fashion boutique based in Harare, Zimbabwe, selling clothing, shoes, bags, and accessories. The physical shop currently supports customers in person and through WhatsApp at **0711692134**.
+TASHY'S BOUTIQUE is a women's fashion boutique based in Harare, Zimbabwe, selling clothes and shoes. The Clothes collection groups dresses, suits, skirts, and blouses together. The physical shop currently supports customers in person and through WhatsApp at **0711692134**.
 
 ## Problem
 
@@ -50,7 +50,7 @@ Admins sign in with the seeded admin account to view store totals and manage pro
 - Customer-specific cart, delivery checkout, mock payment success/failure, and order history/detail pages.
 - Protected admin dashboard with user/product/order/revenue statistics and product/category CRUD.
 - Admin order status and customer management.
-- SQLite/PostgreSQL schema and seed data for nine products based on the supplied public images, three categories, and demo accounts.
+- SQLite/PostgreSQL schema and seed data for nine products based on the supplied public images, Clothes and Shoes categories, and demo accounts.
 - Responsive luxury pink, black, and white interface with loading/error states and a floating WhatsApp link.
 - Prisma queries, validated API inputs, same-origin mutation checks, React's escaped rendering, and security headers.
 

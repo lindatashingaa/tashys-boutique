@@ -3,13 +3,14 @@ import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 import { productSchema } from '@/lib/schemas';
 import { encodeImageUrls, withProductImages } from '@/lib/images';
-import { currentCatalogSlugs } from '@/lib/catalog';
+import { shopCategorySlugs } from '@/lib/catalog';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const search = searchParams.get('search')?.trim();
   const category = searchParams.get('category');
-  const where = { slug: { in: currentCatalogSlugs }, ...(search ? { name: { contains: search, mode: 'insensitive' as const } } : {}), ...(category ? { category: { slug: category } } : {}) };
+  const categoryWhere = category ? { category: { slug: category } } : { category: { slug: { in: shopCategorySlugs } } };
+  const where = { imageUrl: { contains: '/images/' }, ...categoryWhere, ...(search ? { name: { contains: search, mode: 'insensitive' as const } } : {}) };
   try { return NextResponse.json((await prisma.product.findMany({ where, include: { category: true }, orderBy: { createdAt: 'desc' } })).map(withProductImages)); }
   catch { return NextResponse.json({ error: 'Products are unavailable until the database is configured.' }, { status: 503 }); }
 }
