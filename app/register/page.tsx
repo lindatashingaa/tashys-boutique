@@ -1,0 +1,4 @@
+import type { Metadata } from 'next';
+import { AuthForm } from '@/components/AuthForm';
+export const metadata: Metadata = { title: 'Create an account' };
+export default function RegisterPage({ searchParams }: { searchParams: { next?: string } }) { return <section className="auth-page"><div className="auth-intro register-intro"><span className="eyebrow">A LITTLE MORE YOU</span><h1>Good things<br />start here.</h1><p>Save your favorites and keep all your boutique moments together.</p></div><div className="auth-panel"><span className="eyebrow">JOIN THE CIRCLE</span><h2>Create account</h2><AuthForm mode="register" nextPath={searchParams.next} /></div></section>; }

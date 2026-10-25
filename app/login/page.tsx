@@ -1,0 +1,4 @@
+import type { Metadata } from 'next';
+import { AuthForm } from '@/components/AuthForm';
+export const metadata: Metadata = { title: 'Sign in' };
+export default function LoginPage({ searchParams }: { searchParams: { next?: string } }) { return <section className="auth-page"><div className="auth-intro"><span className="eyebrow">YOUR LITTLE CORNER</span><h1>Lovely to see<br />you again.</h1><p>Your next favorite is never far away.</p></div><div className="auth-panel"><span className="eyebrow">WELCOME BACK</span><h2>Sign in</h2><AuthForm mode="login" nextPath={searchParams.next} /></div></section>; }
