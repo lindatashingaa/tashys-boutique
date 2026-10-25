@@ -15,7 +15,25 @@ export function AuthForm({ mode, nextPath }: { mode: 'login' | 'register'; nextP
     const result = await response.json();
     if (!response.ok) { setError(result.error || 'Please try again.'); setBusy(false); return; }
     const safeNext = nextPath?.startsWith('/') && !nextPath.startsWith('//') && !nextPath.includes('\\') ? nextPath : null;
-    const destination = safeNext || (result.user.role === 'ADMIN' ? '/admin' : '/');
+    let destination = safeNext || (result.user.role === 'ADMIN' ? '/admin' : '/');
+    const pendingCartAdd = sessionStorage.getItem('tashys_pending_cart_add');
+    if (pendingCartAdd) {
+      try {
+        const cartResponse = await fetch('/api/cart', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: pendingCartAdd });
+        const cartResult = await cartResponse.json();
+        sessionStorage.removeItem('tashys_pending_cart_add');
+        if (!cartResponse.ok) {
+          setError(cartResult.error || 'You are signed in, but this item could not be added to your bag.');
+          setBusy(false);
+          return;
+        }
+        destination = '/cart';
+      } catch {
+        setError('You are signed in, but your bag could not be updated. Please try adding the item again.');
+        setBusy(false);
+        return;
+      }
+    }
     router.push(destination); router.refresh();
   }
   return <form className="form-stack" onSubmit={submit}>

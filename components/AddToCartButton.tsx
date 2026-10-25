@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ShoppingBag } from 'lucide-react';
 
+const pendingCartAddKey = 'tashys_pending_cart_add';
+
 export function AddToCartButton({ productId, stock }: { productId: string; stock: number }) {
   const [quantity, setQuantity] = useState(1);
   const [message, setMessage] = useState('');
@@ -11,10 +13,22 @@ export function AddToCartButton({ productId, stock }: { productId: string; stock
   const router = useRouter();
   async function add() {
     setBusy(true); setMessage('');
-    const response = await fetch('/api/cart', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId, quantity }) });
+    let response: Response;
+    try {
+      response = await fetch('/api/cart', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId, quantity }) });
+    } catch {
+      setMessage('Could not reach the boutique. Please try again.');
+      setBusy(false);
+      return;
+    }
+    if (response.status === 401) {
+      sessionStorage.setItem(pendingCartAddKey, JSON.stringify({ productId, quantity }));
+      router.push('/login?next=/cart');
+      setBusy(false);
+      return;
+    }
     const data = await response.json();
-    if (response.status === 401) router.push('/login?next=/cart');
-    else if (!response.ok) setMessage(data.error || 'Could not add this item.');
+    if (!response.ok) setMessage(data.error || 'Could not add this item.');
     else {
       setMessage('Added to your bag.');
       window.setTimeout(() => setMessage(''), 3200);
